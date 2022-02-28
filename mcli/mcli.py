@@ -32,8 +32,8 @@ def parse_args():
     return argp.parse_args()
 
 
-def get_url(name, port):
-    return "http://{}:{}/api/v1/music/".format(name, port)
+def get_url(name, port, api_name='music'):
+    return "http://{}:{}/api/v1/{}/".format(name, port, api_name)
 
 
 def parse_quoted_strings(arg):

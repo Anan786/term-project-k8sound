@@ -53,3 +53,42 @@ The resulting output should include tables `User` and `Music`.
 ----
 
 
+### Client Code: mcli
+
+Go to our client code folder.
+
+```
+$ cd /home/k8s/mcli
+```
+
+Build the client code image first. Note that everytime a change is made to the client code, the image must be re-built again.
+
+```
+$ make build-mcli
+```
+
+Supply the DNS name of the EC2 instance that hosts our server code to the make file for the command run-mcli. This will start a Docker container running the client code and connecting to our EC2 server instance.
+
+```
+$ make SERVER={EC2-DNS-NAME} run-mcli
+```
+
+The client code resides on:
+
+```
+/home/k8s/mcli/mcli.py
+```
+
+There is a class called **Mcli** which extends the **cmd.Cmd class**. If we want to add a new command to the client code, we need to create a new function under the class Mcli and comply with the following function name format:
+
+```python
+def do_{command_name}(self, arg):
+    ...
+```
+
+For example, if we want to add a new command called **add_playlist**, we need to create a new function under the class Mcli called:
+
+```python
+def do_add_playlist(self, arg):
+    ...
+```

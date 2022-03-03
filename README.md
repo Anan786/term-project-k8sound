@@ -56,16 +56,16 @@ The resulting output should include tables `User` and `Music`.
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.
 
-Follow the link provided below for instruction to install `Minikube` on your local machine:
+### 1. Follow the link provided below for instruction to install `Minikube` on your local machine:
 https://minikube.sigs.k8s.io/docs/start/
 
-### 1. To start the Minikube, run the below command on your local machine:
+### 2. To start the Minikube, run the below command on your local machine:
 
 ~~~
 $ make -f mk.mak start
 ~~~
 
-### 2. For external IP of `istio`, open a new window, run: 
+### 3. For external IP of `istio`, open a new window, run: 
 (Keep the window open for client to access the cluster!)
 
 ~~~
@@ -88,7 +88,7 @@ $ cd istio-1.13.1
 $ export PATH=$PWD/bin:$PATH
 ~~~
 
-### 3. Setup the `Kubenetes` on `Minikube`:
+### 4. Setup the `Kubenetes` on `Minikube`:
 ~~~
 # Create c756ns namespace inside each cluster and set each context to use
 $ kubectl config use-context minikube
@@ -102,7 +102,7 @@ $ istioctl install -y --set profile=demo --set hub=gcr.io/istio-release
 $ kubectl label namespace c756ns istio-injection=enabled
 ~~~
 
-### 4. Launch the cliend mcli with the specific Server IP:
+### 5. Launch the cliend mcli with the specific Server IP:
 ~~~
 $ make PORT=80 SERVER=host.docker.internal run-mcli
 ~~~

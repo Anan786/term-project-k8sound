@@ -52,7 +52,7 @@ The resulting output should include tables `User` and `Music`.
 
 ----
 
-### Minikube
+## Minikube
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.
 
@@ -109,7 +109,7 @@ $ make PORT=80 SERVER=host.docker.internal run-mcli
 
 ----
 
-### Local dynamoDB
+## Local dynamoDB
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.
 
@@ -129,7 +129,13 @@ $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 dynamodb_url = 'http://host.docker.internal:8000'
 ~~~
 
-### 4. Test
+### 4. Initialize local DynamoDB and load it with initial data:
+
+~~~
+$ make -f k8s.mak local-loader
+~~~
+
+### 5. Test
 When you create a new music record by `mcli` (client), you can run the command below to see if the record has been added to the local dynamoDB table:
 
 ~~~

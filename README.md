@@ -56,7 +56,7 @@ The resulting output should include tables `User` and `Music`.
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.
 
-Follow the following instruction to install `Minikube` on your local machine:
+Follow the link provided below for instruction to install `Minikube` on your local machine:
 https://minikube.sigs.k8s.io/docs/start/
 
 ### 1. To start the Minikube, run the below command on your local machine:
@@ -65,13 +65,14 @@ https://minikube.sigs.k8s.io/docs/start/
 $ make -f mk.mak start
 ~~~
 
-### 2. For external IP of `istio`, open a new window, run: (Keep the window open for client to access the cluster!)
+### 2. For external IP of `istio`, open a new window, run: 
+(Keep the window open for client to access the cluster!)
 
 ~~~
 $ minikube tunnel
 ~~~
 
-**Note:** To use `Minikube` with `istio`(a service mesh that was conceived concurrently with k8s), follow the instructions to install `istio` on your local machine:
+**Note:** To use `Minikube` with `istio` (a service mesh that was conceived concurrently with k8s), follow the instructions to install `istio` on your local machine:
 (https://istio.io/latest/docs/setup/getting-started/)
 
 ~~~
@@ -112,20 +113,29 @@ $ make PORT=80 SERVER=host.docker.internal run-mcli
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.
 
-Download local dynamodb:
+### 1. Download local dynamodb:
 https://s3.us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.zip
 
-To start the local dynamoDB, run the below command on your local machine:
+### 2. To start the local dynamoDB, run the below command on your local machine: 
+(Keep the DB running!)
 
 ~~~
 $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 ~~~
 
-To connect local db, modify the below parameter `dynamodb_url` in `/db/app.py`:
+### 3. To connect local db, modify the below parameter `dynamodb_url` in `/db/app.py`:
 
 ~~~
 dynamodb_url = 'http://host.docker.internal:8000'
 ~~~
+
+### 4. Test
+When you create a new music record by `mcli` (client), you can run the command below to see if the record has been added to the local dynamoDB table:
+
+~~~
+$ aws dynamodb scan --table-name <TABLE-NAME> --endpoint-url http://localhost:8000
+~~~
+
 
 ----
 

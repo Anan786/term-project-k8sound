@@ -49,6 +49,15 @@ def pytest_addoption(parser):
         help="Port number of music service."
         )
     parser.addoption(
+        '--playlist_address',
+        help="DNS name or IP address of playlist service."
+        )
+    parser.addoption(
+        '--playlist_port',
+        type=int,
+        help="Port number of playlist service."
+        )
+    parser.addoption(
         '--table_suffix',
         help="Suffix to add to table names (not including leading "
              "'-').  If suffix is 'scp756-2022', the music table "
@@ -77,6 +86,16 @@ def music_port(request):
 
 
 @pytest.fixture
+def playlist_address(request):
+    return request.config.getoption('--playlist_address')
+
+
+@pytest.fixture
+def playlist_port(request):
+    return request.config.getoption('--playlist_port')
+
+
+@pytest.fixture
 def table_suffix(request):
     return request.config.getoption('--table_suffix')
 
@@ -94,9 +113,9 @@ def music_url(request, music_address, music_port):
 
 
 @pytest.fixture
-def playlist_url(request, music_address, music_port):
+def playlist_url(request, playlist_address, playlist_port):
     return "http://{}:{}/api/v1/playlist/".format(
-        music_address, music_port)
+        playlist_address, playlist_port)
 
 
 @pytest.fixture

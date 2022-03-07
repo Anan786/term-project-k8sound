@@ -33,7 +33,7 @@ class Playlist():
                 },
             headers={KEY_AUTH: self._auth}
         )
-        return r.status_code
+        return r.status_code, r.json()['playlist_id']
 
     def delete(self, p_id):
         r = requests.post(
@@ -47,5 +47,5 @@ class Playlist():
             self._url + p_id,
             headers={KEY_AUTH: self._auth}
         )
-        return r.status_code, r.json['Playlist'] # TODO: Temporary Key
+        return r.status_code, r.json()['Playlist'] # TODO: Temporary Key
 

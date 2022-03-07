@@ -92,10 +92,12 @@ def music_url(request, music_address, music_port):
     return "http://{}:{}/api/v1/music/".format(
         music_address, music_port)
 
+
 @pytest.fixture
 def playlist_url(request, music_address, music_port):
     return "http://{}:{}/api/v1/playlist/".format(
         music_address, music_port)
+
 
 @pytest.fixture
 def auth(request):

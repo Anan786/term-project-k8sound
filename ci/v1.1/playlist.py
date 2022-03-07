@@ -15,6 +15,7 @@ class Playlist():
         self._auth = auth
 
     # TODO: Fix params once figured out (Array or single ID)
+    # Also, will have to figure out how to delete music from playlist
     def update(self, p_id, m_id):
         r = requests.put(
             self._url + p_id,
@@ -25,11 +26,11 @@ class Playlist():
         )
         return r.status_code
 
-    def create(self, m_id):
+    def create(self, m_ids):
         r = requests.post(
             self._url,
             json={
-                KEY_M_ID: m_id,
+                KEY_M_ID: m_ids,
                 },
             headers={KEY_AUTH: self._auth}
         )

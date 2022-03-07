@@ -11,7 +11,7 @@ def pserv(request, playlist_url, auth):
 
 @pytest.fixture
 def playlist_ex(request):
-    return [1, 2, 3]  # TODO: Music IDs?
+    return ['1', '2', '3']  # TODO: Music IDs?
 
 
 def test_simple_run(pserv, playlist_ex):

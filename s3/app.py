@@ -69,7 +69,7 @@ def update_playlist(playlist_id):
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
-    return Response("", status=200, mimetype="application/json")
+    return Response(json.dumps({"playlist_id": '123'}), status=200, mimetype="application/json")
 
 
 @bp.route('/<playlist_id>', methods=['DELETE'])
@@ -79,7 +79,7 @@ def delete_playlist(playlist_id):
 
 @bp.route('/<playlist_id>', methods=['GET'])
 def get_playlist(playlist_id):
-    return Response("", status=200, mimetype="application/json")
+    return Response(json.dumps({"Playlist": ['902','1000']}), status=200, mimetype="application/json")
 
 
 # All database calls will have this prefix.  Prometheus metric

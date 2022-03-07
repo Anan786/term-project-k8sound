@@ -47,7 +47,7 @@ services:
     depends_on:
       - dynamodb-local
       - cmpt756db
-        #build: ../s3
+    build: ../s3
     image: ci_s3
     container_name: cmpt756s3
     ports:

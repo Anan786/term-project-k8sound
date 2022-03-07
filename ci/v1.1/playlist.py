@@ -4,8 +4,9 @@ Python API for the playlist service.
 
 import requests
 
-KEY_AUTH='Authorization'
-KEY_M_ID='MusicId'
+KEY_AUTH = 'Authorization'
+KEY_M_IDS = 'MusicIds'
+
 
 class Playlist():
     """Python API for the playlist service.
@@ -16,11 +17,11 @@ class Playlist():
 
     # TODO: Fix params once figured out (Array or single ID)
     # Also, will have to figure out how to delete music from playlist
-    def update(self, p_id, m_id):
+    def update(self, p_id, m_ids):
         r = requests.put(
             self._url + p_id,
             json={
-                KEY_M_ID: m_id,
+                KEY_M_IDS: m_ids,
                 },
             headers={KEY_AUTH: self._auth}
         )
@@ -30,7 +31,7 @@ class Playlist():
         r = requests.post(
             self._url,
             json={
-                KEY_M_ID: m_ids,
+                KEY_M_IDS: m_ids,
                 },
             headers={KEY_AUTH: self._auth}
         )
@@ -48,5 +49,4 @@ class Playlist():
             self._url + p_id,
             headers={KEY_AUTH: self._auth}
         )
-        return r.status_code, r.json()['Playlist'] # TODO: Temporary Key
-
+        return r.status_code, r.json()['Playlist']  # TODO: Temporary Key

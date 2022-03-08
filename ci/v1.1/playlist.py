@@ -38,7 +38,7 @@ class Playlist():
         return r.status_code, r.json()['playlist_id']
 
     def delete(self, p_id):
-        r = requests.post(
+        r = requests.delete(
             self._url,
             headers={KEY_AUTH: self._auth}
         )

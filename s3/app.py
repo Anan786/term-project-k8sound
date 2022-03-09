@@ -5,20 +5,20 @@ Playlist Service
 
 # Standard library modules
 import logging
-import sys
-import time
+import sys  # noqa: F401
+import time  # noqa: F401
 
 # Installed packages
 from flask import Blueprint
 from flask import Flask
-from flask import request
+from flask import request  # noqa: F401
 from flask import Response
 
-import jwt
+import jwt  # noqa: F401
 
 from prometheus_flask_exporter import PrometheusMetrics
 
-import requests
+import requests  # noqa: F401
 
 import simplejson as json
 
@@ -69,7 +69,8 @@ def update_playlist(playlist_id):
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
-    return Response(json.dumps({"playlist_id": '123'}), status=200, mimetype="application/json")
+    return Response(json.dumps({"playlist_id": '123'}),
+                    status=200, mimetype="application/json")
 
 
 @bp.route('/<playlist_id>', methods=['DELETE'])
@@ -79,7 +80,8 @@ def delete_playlist(playlist_id):
 
 @bp.route('/<playlist_id>', methods=['GET'])
 def get_playlist(playlist_id):
-    return Response(json.dumps({"Playlist": ['902','1000']}), status=200, mimetype="application/json")
+    return Response(json.dumps({"Playlist": ['902', '1000']}),
+                    status=200, mimetype="application/json")
 
 
 # All database calls will have this prefix.  Prometheus metric

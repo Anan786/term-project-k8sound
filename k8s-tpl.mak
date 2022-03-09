@@ -172,6 +172,16 @@ reinstate: istio
 showcontext:
 	$(KC) config get-contexts
 
+# Run local DynamoDB 
+local-loader: $(LOG_DIR)/loader.repo.log cluster/loader.yaml
+	$(AWS) dynamodb create-table --cli-input-json file://cluster/localdynamodb-music.json --endpoint-url http://localhost:8000 || true | tee $(LOG_DIR)/dynamodb-init.log
+	$(AWS) dynamodb create-table --cli-input-json file://cluster/localdynamodb-user.json --endpoint-url http://localhost:8000 || true | tee $(LOG_DIR)/dynamodb-init.log
+	sleep 20
+	$(KC) -n $(APP_NS) delete --ignore-not-found=true jobs/cmpt756loader
+	tools/build-configmap.sh gatling/resources/users.csv cluster/users-header.yaml | kubectl -n $(APP_NS) apply -f -
+	tools/build-configmap.sh gatling/resources/music.csv cluster/music-header.yaml | kubectl -n $(APP_NS) apply -f -
+	$(KC) -n $(APP_NS) apply -f cluster/loader.yaml | tee $(LOG_DIR)/loader.log
+
 # Run the loader, rebuilding if necessary, starting DynamDB if necessary, building ConfigMaps
 loader: dynamodb-init $(LOG_DIR)/loader.repo.log cluster/loader.yaml
 	$(KC) -n $(APP_NS) delete --ignore-not-found=true jobs/cmpt756loader

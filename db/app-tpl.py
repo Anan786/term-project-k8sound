@@ -48,6 +48,9 @@ loader_token = os.getenv('SVC_LOADER_TOKEN')
 # In some testing contexts, we pass in the DynamoDB URL
 dynamodb_url = os.getenv('DYNAMODB_URL', '')
 
+# For local dynamodb
+# dynamodb_url = 'http://host.docker.internal:8000'
+
 if dynamodb_url == '':
     dynamodb = boto3.resource(
         'dynamodb',
@@ -100,8 +103,11 @@ def read():
     table_name = objtype.capitalize()+"-ZZ-REG-ID"
     table_id = objtype + "_id"
     table = dynamodb.Table(table_name)
-    response = table.query(Select='ALL_ATTRIBUTES',
-                           KeyConditionExpression=Key(table_id).eq(objkey))
+    if objkey:
+        response = table.query(Select='ALL_ATTRIBUTES',
+                               KeyConditionExpression=Key(table_id).eq(objkey))
+    else:
+        response = table.scan()
     return response
 
 

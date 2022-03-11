@@ -69,11 +69,11 @@ provision: istio prom deploy
 # --- deploy: Deploy and monitor the three microservices
 # Use `provision` to deploy the entire stack (including Istio, Prometheus, ...).
 # This target only deploys the sample microservices
-deploy: appns gw s1 s2 db monitoring
+deploy: appns gw s1 s2 s3 db monitoring
 	$(KC) -n $(APP_NS) get gw,vs,deploy,svc,pods
 
 # --- rollout: Rollout new deployments of all microservices
-rollout: rollout-s1 rollout-s2 rollout-db
+rollout: rollout-s1 rollout-s2 rollout-s3 rollout-db
 
 # --- rollout-s1: Rollout a new deployment of S1
 rollout-s1: s1
@@ -84,6 +84,10 @@ rollout-s2: $(LOG_DIR)/s2-$(S2_VER).repo.log  cluster/s2-dpl-$(S2_VER).yaml
 	$(KC) -n $(APP_NS) apply -f cluster/s2-dpl-$(S2_VER).yaml | tee $(LOG_DIR)/rollout-s2.log
 	$(KC) rollout -n $(APP_NS) restart deployment/cmpt756s2-$(S2_VER) | tee -a $(LOG_DIR)/rollout-s2.log
 
+# --- rollout-s3: Rollout a new deployment of S3
+rollout-s3: s3
+	$(KC) rollout -n $(APP_NS) restart deployment/cmpt756s3
+
 # --- rollout-db: Rollout a new deployment of DB
 rollout-db: db
 	$(KC) rollout -n $(APP_NS) restart deployment/cmpt756db
@@ -93,6 +97,7 @@ rollout-db: db
 health-off:
 	$(KC) -n $(APP_NS) apply -f cluster/s1-nohealth.yaml
 	$(KC) -n $(APP_NS) apply -f cluster/s2-nohealth.yaml
+	$(KC) -n $(APP_NS) apply -f cluster/s3-nohealth.yaml
 	$(KC) -n $(APP_NS) apply -f cluster/db-nohealth.yaml
 
 # --- scratch: Delete the microservices and everything else in application NS
@@ -132,6 +137,9 @@ log-s1:
 log-s2:
 	$(KC) -n $(APP_NS) logs deployment/cmpt756s2 --container cmpt756s2
 
+log-s3:
+	$(KC) -n $(APP_NS) logs deployment/cmpt756s3 --container cmpt756s3
+
 log-db:
 	$(KC) -n $(APP_NS) logs deployment/cmpt756db --container cmpt756db
 
@@ -144,6 +152,10 @@ shell-s1:
 shell-s2:
 	@echo Use the following command line to drop into the s2 service:
 	@echo   $(KC) -n $(APP_NS) exec -it deployment/cmpt756s2 --container cmpt756s2 -- bash
+
+shell-s3:
+	@echo Use the following command line to drop into the s3 service:
+	@echo   $(KC) -n $(APP_NS) exec -it deployment/cmpt756s3 --container cmpt756s3 -- bash
 
 shell-db:
 	@echo Use the following command line to drop into the db service:
@@ -296,6 +308,12 @@ s2: rollout-s2 cluster/s2-svc.yaml cluster/s2-sm.yaml cluster/s2-vs.yaml
 	$(KC) -n $(APP_NS) apply -f cluster/s2-svc.yaml | tee $(LOG_DIR)/s2.log
 	$(KC) -n $(APP_NS) apply -f cluster/s2-sm.yaml | tee -a $(LOG_DIR)/s2.log
 	$(KC) -n $(APP_NS) apply -f cluster/s2-vs.yaml | tee -a $(LOG_DIR)/s2.log
+
+# Update S3 and associated monitoring, rebuilding if necessary
+s3: $(LOG_DIR)/s3.repo.log cluster/s3.yaml cluster/s3-sm.yaml cluster/s3-vs.yaml
+	$(KC) -n $(APP_NS) apply -f cluster/s3.yaml | tee $(LOG_DIR)/s3.log
+	$(KC) -n $(APP_NS) apply -f cluster/s3-sm.yaml | tee -a $(LOG_DIR)/s3.log
+	$(KC) -n $(APP_NS) apply -f cluster/s3-vs.yaml | tee -a $(LOG_DIR)/s3.log
 
 # Update DB and associated monitoring, rebuilding if necessary
 db: $(LOG_DIR)/db.repo.log cluster/awscred.yaml cluster/dynamodb-service-entry.yaml cluster/db.yaml cluster/db-sm.yaml cluster/db-vs.yaml

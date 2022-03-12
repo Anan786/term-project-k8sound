@@ -12,7 +12,7 @@ KEY_M_IDS = 'MusicIds'
 class Playlist():
     """Python API for the playlist service.
     """
-    def __init__(self, url='http://cmpt756s2:30003/', auth='auth'):
+    def __init__(self, url='http://cmpt756s3:30003/', auth='auth'):
         self._url = url
         self._auth = auth
 

@@ -5,6 +5,7 @@ Python API for the playlist service.
 import requests
 
 KEY_AUTH = 'Authorization'
+KEY_OWNER_ID = 'OwnerId'
 KEY_M_IDS = 'MusicIds'
 
 
@@ -27,12 +28,13 @@ class Playlist():
         )
         return r.status_code
 
-    def create(self, m_ids):
+    def create(self, uid, m_ids):
         r = requests.post(
             self._url,
             json={
+                KEY_OWNER_ID: uid,
                 KEY_M_IDS: m_ids,
-                },
+            },
             headers={KEY_AUTH: self._auth}
         )
         return r.status_code, r.json()['playlist_id']

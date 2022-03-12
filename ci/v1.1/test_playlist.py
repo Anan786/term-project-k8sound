@@ -18,8 +18,9 @@ def playlist_ex(request):
 # This is more of an integration test
 def test_simple_run(pserv, playlist_ex):
     # Test creation and reading
-    first_playlist = [playlist_ex[0], playlist_ex[1]]
-    trc, p_id = pserv.create(first_playlist)
+    user_id = "dummy_uid"
+    music_ids = [playlist_ex[0], playlist_ex[1]]
+    trc, p_id = pserv.create(user_id, music_ids)
     assert trc == 200
     trc, p_list = pserv.get(p_id)
     assert trc == 200 #and p_list == first_playlist  # noqa E261 E262

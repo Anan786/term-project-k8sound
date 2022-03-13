@@ -21,7 +21,7 @@ def test_simple_run(pserv, playlist_ex):
     user_id = "dummy_uid"
     music_ids = [playlist_ex[0], playlist_ex[1]]
     trc, p_id = pserv.create(user_id, music_ids)
-    assert trc == 200
+    assert trc == 200 and p_id and type(p_id) is str  # Check if p_id exists
     trc, p_list = pserv.get(p_id)
     assert trc == 200 #and p_list == first_playlist  # noqa E261 E262
 

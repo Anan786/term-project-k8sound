@@ -70,6 +70,7 @@ def update_playlist(playlist_id):
     try:
         content = request.get_json()
         # TODO: set the owner based on the login certificate
+        # TODO: Check if music exists first
         # MusicIds: list of id => [1, 2, 3]
         OwnerId = content['OwnerId']
         MusicIds = content['MusicIds']

@@ -5,20 +5,17 @@ Playlist Service
 
 # Standard library modules
 import logging
-import sys  # noqa: F401
-import time  # noqa: F401
+import sys
 
 # Installed packages
 from flask import Blueprint
 from flask import Flask
-from flask import request  # noqa: F401
+from flask import request
 from flask import Response
-
-import jwt  # noqa: F401
 
 from prometheus_flask_exporter import PrometheusMetrics
 
-import requests  # noqa: F401
+import requests
 
 import simplejson as json
 

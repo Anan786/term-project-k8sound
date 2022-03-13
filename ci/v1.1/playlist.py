@@ -51,4 +51,13 @@ class Playlist():
             self._url + p_id,
             headers={KEY_AUTH: self._auth}
         )
-        return r.status_code, r.json()['Playlist']  # TODO: Temporary Key
+        items = r.json()['Items']
+        return r.status_code, items
+
+    def getAll(self):
+        r = requests.get(
+            self._url,
+            headers={KEY_AUTH: self._auth}
+        )
+        items = r.json()['Items']
+        return r.status_code, items

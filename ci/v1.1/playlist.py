@@ -51,13 +51,17 @@ class Playlist():
             self._url + p_id,
             headers={KEY_AUTH: self._auth}
         )
-        items = r.json()['Items']
-        return r.status_code, items
+        if r.status_code != 200:
+            return r.status_code, None
+        item = r.json()['Items'][0]
+        return r.status_code, item['MusicIds']
 
     def getAll(self):
         r = requests.get(
             self._url,
             headers={KEY_AUTH: self._auth}
         )
-        items = r.json()['Items']
-        return r.status_code, items
+        items = r.json()
+        if 'Count' not in items:
+            return r.status_code, 0
+        return r.status_code, items['Count']

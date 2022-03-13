@@ -24,18 +24,11 @@ def test_simple_run(pserv, playlist_ex):
     assert trc == 200
 
     # Test list all playlists
-    trc, items = pserv.getAll()
-    p_list = []
-    for i in items:
-        if i['playlist_id'] == p_id:
-            p_list = (i['MusicIds'])
-    assert trc == 200 and set(p_list) == set(music_ids)
+    trc, total_records = pserv.getAll()
+    assert trc == 200 and total_records == 1
 
     # Test read one playlist
-    trc, items = pserv.get(p_id)
-    p_list = []
-    for i in items:
-        p_list = i['MusicIds']
+    trc, p_list = pserv.get(p_id)
     assert trc == 200 and set(p_list) == set(music_ids)
 
     # Test updating

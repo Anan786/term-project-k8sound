@@ -19,7 +19,7 @@ import os
 import pytest
 
 # Local modules
-import create_tables
+from create_tables import DB_Manager
 
 
 def pytest_addoption(parser):
@@ -32,37 +32,48 @@ def pytest_addoption(parser):
     parser.addoption(
         '--user_address',
         dest='user_address',
+        type=str,
+        default='cmpt756s1',
         help="DNS name or IP address of user service."
         )
     parser.addoption(
         '--user_port',
         type=int,
+        default=30000,
         help="Port number of user service."
        )
     parser.addoption(
         '--music_address',
+        type=str,
+        default='cmpt756s2',
         help="DNS name or IP address of music service."
         )
     parser.addoption(
         '--music_port',
         type=int,
+        default=30001,
         help="Port number of music service."
         )
     parser.addoption(
         '--playlist_address',
+        type=str,
+        default='cmpt756s3',
         help="DNS name or IP address of playlist service."
         )
     parser.addoption(
         '--playlist_port',
         type=int,
+        default=30003,
         help="Port number of playlist service."
         )
     parser.addoption(
         '--table_suffix',
+        type=str,
+        default='k8sound',
         help="Suffix to add to table names (not including leading "
-             "'-').  If suffix is 'scp756-2022', the music table "
-             "will be 'Music-scp756-2022'."
-        )
+             "'-').  If suffix is 'k8sound', the music table "
+             "will be 'Music-k8sound'."
+    )
 
 
 @pytest.fixture
@@ -179,14 +190,11 @@ def setup(args):
         The arguments specifying the tables. Uses dynamodb_url,
         dynamodb_region, access_key_id, secret_access_key, table_suffix.
     """
-    create_tables.create_tables(
-        args.dynamodb_url,
-        args.dynamodb_region,
-        args.access_key_id,
-        args.secret_access_key,
-        'Music-' + args.table_suffix,
-        'User-' + args.table_suffix
-    )
+    db = DB_Manager(args.dynamodb_url, args.dynamodb_region,
+                    args.access_key_id, args.secret_access_key)
+    db.create_table('Music-' + args.table_suffix, 'music_id')
+    db.create_table('User-' + args.table_suffix, 'user_id')
+    db.create_table('Playlist-' + args.table_suffix, 'playlist_id')
 
 
 def pytest_configure(config):

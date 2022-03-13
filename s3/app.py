@@ -69,8 +69,26 @@ def update_playlist(playlist_id):
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
-    return Response(json.dumps({"playlist_id": '123'}),
-                    status=200, mimetype="application/json")
+    headers = request.headers
+    # check header here
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    try:
+        content = request.get_json()
+        # TODO: set the owner based on the login certificate
+        # MusicIds: list of id => [1, 2, 3]
+        OwnerId = content['OwnerId']
+        MusicIds = content['MusicIds']
+    except Exception:
+        return json.dumps({"message": "error reading arguments"})
+    url = db['name'] + '/' + db['endpoint'][1]
+    response = requests.post(
+        url,
+        json={"objtype": "playlist", "OwnerId": OwnerId, "MusicIds": MusicIds},
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
 
 @bp.route('/<playlist_id>', methods=['DELETE'])

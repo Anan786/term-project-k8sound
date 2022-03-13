@@ -12,7 +12,7 @@ KEY_M_IDS = 'MusicIds'
 class Playlist():
     """Python API for the playlist service.
     """
-    def __init__(self, url, auth):
+    def __init__(self, url='http://cmpt756s3:30003/', auth='auth'):
         self._url = url
         self._auth = auth
 
@@ -23,7 +23,7 @@ class Playlist():
             self._url + p_id,
             json={
                 KEY_M_IDS: m_ids,
-                },
+            },
             headers={KEY_AUTH: self._auth}
         )
         return r.status_code
@@ -32,8 +32,8 @@ class Playlist():
         r = requests.post(
             self._url,
             json={
-                KEY_OWNER_ID: uid,
                 KEY_M_IDS: m_ids,
+                KEY_OWNER_ID: uid,
             },
             headers={KEY_AUTH: self._auth}
         )

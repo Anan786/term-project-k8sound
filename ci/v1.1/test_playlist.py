@@ -37,6 +37,6 @@ def test_simple_run(pserv, playlist_ex):
     trc, p_list = pserv.get(p_id)
     assert trc == 200 #and p_list == playlist_ex  # noqa E261 E262
 
+    # Test delete
     trc = pserv.delete(p_id)
-    # assert trc == 200
-    assert trc != 200  # TODO: Change when implemented
+    assert trc == 200

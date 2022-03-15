@@ -42,3 +42,14 @@ def test_simple_run(mserv, song, song_update):
     assert trc == 200 and artist == song_update[0] and title == song_update[1]
     mserv.delete(m_id)
     # No status to check
+
+
+def test_nonexisting_music(mserv, song, song_update):
+    m_id = '0'  # Non-exist id
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist is None and title is None
+
+    trc = mserv.update(song_update[0], song_update[1], m_id)
+    assert trc == 200
+
+    mserv.delete(m_id)

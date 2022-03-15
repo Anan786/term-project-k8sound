@@ -98,3 +98,28 @@ class Music():
             self._url + m_id,
             headers={'Authorization': self._auth}
         )
+
+    def update(self, artist, song, m_id):
+        """Update an artist, song pair.
+
+        Parameters
+        ----------
+        artist: string
+            The artist performing song.
+        song: string
+            The name of the song.
+        m_id: string
+            The UUID of this song in the music database.
+
+        Returns
+        -------
+        number
+            The number is the HTTP status code returned by Music.
+        """
+        r = requests.put(
+            self._url + m_id,
+            json={'Artist': artist,
+                  'SongTitle': song},
+            headers={'Authorization': self._auth}
+        )
+        return r.status_code

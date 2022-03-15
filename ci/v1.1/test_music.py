@@ -26,10 +26,19 @@ def song(request):
     return ('Elvis Presley', 'Hound Dog')
 
 
-def test_simple_run(mserv, song):
+@pytest.fixture
+def song_update(request):
+    return ('Tsuko G.', 'Deja Vu')
+
+
+def test_simple_run(mserv, song, song_update):
     trc, m_id = mserv.create(song[0], song[1])
     assert trc == 200
     trc, artist, title = mserv.read(m_id)
     assert trc == 200 and artist == song[0] and title == song[1]
+    trc = mserv.update(song_update[0], song_update[1], m_id)
+    assert trc == 200
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist == song_update[0] and title == song_update[1]
     mserv.delete(m_id)
     # No status to check

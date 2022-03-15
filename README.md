@@ -109,6 +109,34 @@ $ make PORT=80 SERVER=host.docker.internal run-mcli
 
 ----
 
+## Deploy New Services
+
+To deploy new services, please always ensure that your template files are up to date. Run this command to update your template files:
+```
+make -f k8s-tpl.mak templates
+```
+
+Build the service images and push them to your container registry:
+```
+make -f k8s.mak cri
+```
+
+Ensure that your cluster is started. To deploy the services, run:
+```
+make -f k8s.mak deploy
+```
+
+To clear the deployed services from your cluster, run:
+```
+make -f k8s.mak scratch
+```
+
+To update your services, run:
+```
+make -f k8s.mak rollout
+```
+
+
 ## Local dynamoDB
 
 **Note:** In the section, all commands are run and tested on Mac operating system. Some command might not work on Windows operating system.

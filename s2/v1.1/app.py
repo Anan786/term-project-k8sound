@@ -142,6 +142,7 @@ def update_song(music_id):
         headers={'Authorization': headers['Authorization']})
     return (response.json())
 
+
 # All database calls will have this prefix.  Prometheus metric
 # calls will not---they will have route '/metrics'.  This is
 # the conventional organization.

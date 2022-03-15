@@ -41,7 +41,7 @@ class Playlist():
 
     def delete(self, p_id):
         r = requests.delete(
-            self._url,
+            self._url + p_id,
             headers={KEY_AUTH: self._auth}
         )
         return r.status_code

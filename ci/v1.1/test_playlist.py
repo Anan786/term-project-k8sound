@@ -21,7 +21,7 @@ def test_simple_run(pserv, playlist_ex):
     user_id = "dummy_uid"
     music_ids = [playlist_ex[0], playlist_ex[1]]
     trc, p_id = pserv.create(user_id, music_ids)
-    assert trc == 200
+    assert trc == 200 and p_id and type(p_id) is str  # Check if p_id exists
 
     # Test list all playlists
     trc, total_records = pserv.getAll()
@@ -35,7 +35,7 @@ def test_simple_run(pserv, playlist_ex):
     trc = pserv.update(p_id, [playlist_ex[2]])
     assert trc == 200
     trc, p_list = pserv.get(p_id)
-    assert trc == 200 #and p_list == playlist_ex  # noqa E261 E262
+    assert trc == 200 #and p_list == [playlist_ex[2]]  # noqa E261 E262
 
     # Test delete
     trc = pserv.delete(p_id)

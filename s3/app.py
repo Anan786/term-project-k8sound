@@ -6,15 +6,12 @@ Playlist Service
 # Standard library modules
 import logging
 import sys
-import time
 
 # Installed packages
 from flask import Blueprint
 from flask import Flask
 from flask import request
 from flask import Response
-
-import jwt
 
 from prometheus_flask_exporter import PrometheusMetrics
 
@@ -42,14 +39,6 @@ db = {
 }
 
 
-@bp.route('/', methods=['GET'])
-@metrics.do_not_track()
-def hello_world():
-    return ("If you are reading this in a browser, your service is "
-            "operational. Switch to curl/Postman/etc to interact using the "
-            "other HTTP verbs.")
-
-
 @bp.route('/health')
 @metrics.do_not_track()
 def health():
@@ -62,6 +51,24 @@ def readiness():
     return Response("", status=200, mimetype="application/json")
 
 
+@bp.route('/', methods=['GET'])
+def list_all():
+    headers = request.headers
+    # check header here
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    # list all songs here
+    payload = {"objtype": "playlist", "objkey": ""}
+    url = db['name'] + '/' + db['endpoint'][0]
+    response = requests.get(
+        url,
+        params=payload,
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
+
+
 @bp.route('/<playlist_id>', methods=['PUT'])
 def update_playlist(playlist_id):
     return Response("", status=200, mimetype="application/json")
@@ -69,7 +76,26 @@ def update_playlist(playlist_id):
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
-    return Response("", status=200, mimetype="application/json")
+    headers = request.headers
+    # check header here
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    try:
+        content = request.get_json()
+        # TODO: set the owner based on the login certificate
+        # MusicIds: list of id => [1, 2, 3]
+        OwnerId = content['OwnerId']
+        MusicIds = content['MusicIds']
+    except Exception:
+        return json.dumps({"message": "error reading arguments"})
+    url = db['name'] + '/' + db['endpoint'][1]
+    response = requests.post(
+        url,
+        json={"objtype": "playlist", "OwnerId": OwnerId, "MusicIds": MusicIds},
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
 
 @bp.route('/<playlist_id>', methods=['DELETE'])
@@ -79,7 +105,19 @@ def delete_playlist(playlist_id):
 
 @bp.route('/<playlist_id>', methods=['GET'])
 def get_playlist(playlist_id):
-    return Response("", status=200, mimetype="application/json")
+    headers = request.headers
+    # check header here
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    payload = {"objtype": "playlist", "objkey": playlist_id}
+    url = db['name'] + '/' + db['endpoint'][0]
+    response = requests.get(
+        url,
+        params=payload,
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
 
 # All database calls will have this prefix.  Prometheus metric

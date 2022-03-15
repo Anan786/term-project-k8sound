@@ -14,8 +14,9 @@ import sys
 # Installed packages
 
 # Local modules
-import create_tables
+from create_tables import DB_Manager
 import music
+import playlist
 
 # The services check only that we pass an authorization,
 # not whether it's valid
@@ -32,38 +33,57 @@ def parse_args():
         'user_url' and 'music_url'.
     """
     argp = argparse.ArgumentParser(
-        'ci_test',
+        '--ci_test',
         description='Integration test of CMPT 756 sample application'
         )
     argp.add_argument(
-        'user_address',
+        '--user_address',
+        type=str, 
+        default='cmpt756s1',
         help="DNS name or IP address of user service."
         )
     argp.add_argument(
-        'user_port',
+        '--user_port',
         type=int,
+        default=30000,
         help="Port number of user service."
         )
     argp.add_argument(
-        'music_address',
+        '--music_address',
+        type=str, 
+        default='cmpt756s2',
         help="DNS name or IP address of music service."
         )
     argp.add_argument(
-        'music_port',
+        '--music_port',
         type=int,
+        default=30001,
         help="Port number of music service."
         )
     argp.add_argument(
-        'table_suffix',
+        '--playlist_address',
+        type=str, 
+        default='cmpt756s3',
+        help="DNS name or IP address of user service."
+        )
+    argp.add_argument(
+        '--playlist_port',
+        type=int,
+        default=30003,
+        help="Port number of user service."
+        )
+    argp.add_argument(
+        '--table_suffix',
+        type=str, 
+        default='k8sound',
         help="Suffix to add to table names (not including leading "
-             "'-').  If suffix is 'scp756-2022', the music table "
-             "will be 'Music-scp756-2022'."
+             "'-').  If suffix is 'k8sound', the music table "
+             "will be 'Music-k8sound'."
     )
     args = argp.parse_args()
-    args.user_url = "http://{}:{}/api/v1/user/".format(
-        args.user_address, args.user_port)
-    args.music_url = "http://{}:{}/api/v1/music/".format(
-        args.music_address, args.music_port)
+    args.user_url = f"http://{args.user_address}:{args.user_port}/api/v1/user/"
+    args.music_url = f"http://{args.music_address}:{args.music_port}/api/v1/music/"
+    args.playlist_url = f"http://{args.playlist_address}:{args.playlist_port}/api/v1/playlist/"
     return args
 
 
@@ -112,17 +132,15 @@ def setup(args):
         The arguments specifying the tables. Uses dynamodb_url,
         dynamodb_region, access_key_id, secret_access_key, table_suffix.
     """
-    create_tables.create_tables(
-        args.dynamodb_url,
-        args.dynamodb_region,
-        args.access_key_id,
-        args.secret_access_key,
-        'Music-' + args.table_suffix,
-        'User-' + args.table_suffix
-    )
+
+    db = DB_Manager(args.dynamodb_url, args.dynamodb_region, args.access_key_id, args.secret_access_key)
+    
+    db.create_table('Music-' + args.table_suffix, 'music_id')
+    db.create_table('User-' + args.table_suffix, 'user_id')
+    db.create_table('Playlist-' + args.table_suffix, 'playlist_id')
 
 
-def run_test(args):
+def run_music_test(args):
     """Run the tests.
 
     Parameters
@@ -170,10 +188,26 @@ def run_test(args):
     return trc
 
 
+def run_playlist_test(args):
+    pl_serv = playlist.Playlist(args.playlist_url, DUMMY_AUTH)
+    
+    # TODO: verify if uid and m_ids all exist
+    uid = 1
+    m_ids = ['1', '2', '3']
+    trc, playlist_id = pl_serv.create(uid, m_ids)
+    if playlist_id is None:
+        sys.exit(2)
+    return trc
+
+    
 if __name__ == '__main__':
     args = parse_args()
     get_env_vars(args)
     setup(args)
-    trc = run_test(args)
+    trc = run_music_test(args)
     if trc != 200:
         sys.exit(1)
+        
+    trc = run_playlist_test(args)
+    if trc != 200:
+        sys.exit(2)

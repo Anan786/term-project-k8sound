@@ -76,11 +76,6 @@ def get_song(music_id):
                         mimetype='application/json')
     payload = {"objtype": "music", "objkey": music_id}
 
-    # This version will return 500 for a fraction of its calls
-    if random.randrange(100) < PERCENT_ERROR:
-        return Response(json.dumps({"error": "get_song failed"}),
-                        status=500,
-                        mimetype='application/json')
 
     url = db['name'] + '/' + db['endpoint'][0]
     response = requests.get(

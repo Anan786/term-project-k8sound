@@ -21,7 +21,7 @@ if [[ $# -gt 1 ]]; then
 elif [[ $# -eq 1 ]]; then
   ver="${1}"
 else
-  ver=v1
+  ver=v1.1
 fi
 
 ./clear-ci-images.sh

@@ -1,0 +1,19 @@
+{
+    "TableName": "Music-ZZ-REG-ID",
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "music_id",
+        "AttributeType": "S"
+      }
+    ],
+    "KeySchema": [
+      {
+        "AttributeName": "music_id",
+        "KeyType": "HASH"
+      }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+  }

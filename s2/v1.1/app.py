@@ -61,7 +61,13 @@ def list_all():
                         status=401,
                         mimetype='application/json')
     # list all songs here
-    return {}
+    payload = {"objtype": "music", "objkey": ""}
+    url = db['name'] + '/' + db['endpoint'][0]
+    response = requests.get(
+        url,
+        params=payload,
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
 
 @bp.route('/<music_id>', methods=['GET'])
@@ -96,9 +102,10 @@ def create_song():
     except Exception:
         return json.dumps({"message": "error reading arguments"})
     url = db['name'] + '/' + db['endpoint'][1]
+    payload = {"objtype": "music", "Artist": Artist, "SongTitle": SongTitle}
     response = requests.post(
         url,
-        json={"objtype": "music", "Artist": Artist, "SongTitle": SongTitle},
+        json=payload,
         headers={'Authorization': headers['Authorization']})
     return (response.json())
 

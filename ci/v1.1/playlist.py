@@ -18,10 +18,11 @@ class Playlist():
 
     # TODO: Fix params once figured out (Array or single ID)
     # Also, will have to figure out how to delete music from playlist
-    def update(self, p_id, m_ids):
+    def update(self, p_id, uid, m_ids):
         r = requests.put(
             self._url + p_id,
             json={
+                KEY_OWNER_ID: uid,
                 KEY_M_IDS: m_ids,
                 },
             headers={KEY_AUTH: self._auth}

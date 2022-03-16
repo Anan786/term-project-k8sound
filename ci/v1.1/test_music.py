@@ -42,3 +42,31 @@ def test_simple_run(mserv, song, song_update):
     assert trc == 200 and artist == song_update[0] and title == song_update[1]
     mserv.delete(m_id)
     # No status to check
+
+
+def test_integration_scenarios(mserv, song, song_update):
+    # Test operations before creation
+    m_id = '0'  # Non-exist id
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist is None and title is None
+    trc = mserv.update(song_update[0], song_update[1], m_id)
+    assert trc == 200
+    mserv.delete(m_id)
+
+    # Test operations after creation
+    trc, m_id = mserv.create(song[0], song[1])
+    assert trc == 200
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist == song[0] and title == song[1]
+    trc = mserv.update(song_update[0], song_update[1], m_id)
+    assert trc == 200
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist == song_update[0] and title == song_update[1]
+    mserv.delete(m_id)
+
+    # Test operations after deletion
+    mserv.delete(m_id)
+    trc, artist, title = mserv.read(m_id)
+    assert trc == 200 and artist is None and title is None
+    trc = mserv.update(song_update[0], song_update[1], m_id)
+    assert trc == 200

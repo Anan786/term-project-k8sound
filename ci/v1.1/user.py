@@ -22,7 +22,7 @@ class User():
         self._url = url
         self._auth = auth
 
-    def create(self, lname, fname, email):
+    def create(self, lname, email, fname):
         r = requests.post(
             self._url,
             json={"objtype": "user",

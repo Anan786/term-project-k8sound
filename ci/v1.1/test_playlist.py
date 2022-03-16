@@ -32,10 +32,10 @@ def test_simple_run(pserv, playlist_ex):
     assert trc == 200 and set(p_list) == set(music_ids)
 
     # Test updating
-    trc = pserv.update(p_id, [playlist_ex[2]])
+    trc = pserv.update(p_id, user_id, [playlist_ex[2]])
     assert trc == 200
     trc, p_list = pserv.get(p_id)
-    assert trc == 200 and p_list == [playlist_ex[2]]  # noqa E261 E262
+    assert trc == 200 and p_list == [playlist_ex[2]]
 
     # Test delete
     trc = pserv.delete(p_id)

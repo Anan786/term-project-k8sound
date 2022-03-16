@@ -11,23 +11,25 @@ def userv(request, user_url, auth):
 
 
 @pytest.fixture
-def user(request):
+def user_info(request):
     return ('Jobs', 'stevejobs@apple.com', 'Steve')
 
 
 @pytest.fixture
-def user_update(request):
+def info_update(request):
     return ('Cook', 'timcook@apple.com', 'Tim')
 
 
-def test_simple_run(userv, user, user_update):
-    trc, u_id = userv.create(user[0], user[1], user[2])
+def test_simple_run(userv, user_info, info_update):
+    trc, u_id = userv.create(user_info[0], user_info[1], user_info[2])
     assert trc == 200
     trc, lname, email, fname = userv.read(u_id)
-    assert trc == 200 and lname == user[0] and email == user[1] and fname == user[2]
-    trc = userv.update(user_update[0], user_update[1], user_update[2], u_id)
+    assert trc == 200 and lname == user_info[0] and \
+        email == user_info[1] and fname == user_info[2]
+    trc = userv.update(info_update[0], info_update[1], info_update[2], u_id)
     assert trc == 200
     trc, lname, email, fname = userv.read(u_id)
-    assert trc == 200 and lname == user[0] and email == user[1] and fname == user[2]
+    assert trc == 200 and lname == info_update[0] and \
+        email == info_update[1] and fname == info_update[2]
     userv.delete(u_id)
     # No status to check

@@ -26,9 +26,9 @@ class User():
         r = requests.post(
             self._url,
             json={"objtype": "user",
-              "lname": lname,
-              "email": email,
-              "fname": fname},
+                  "lname": lname,
+                  "email": email,
+                  "fname": fname},
             headers={'Authorization': self._auth}
         )
         return r.status_code, r.json()['user_id']
@@ -72,9 +72,8 @@ class User():
         r = requests.put(
             self._url + user_id,
             json={"lname": lname,
-              "email": email,
-              "fname": fname},
+                  "email": email,
+                  "fname": fname},
             headers={'Authorization': self._auth}
         )
         return r.status_code
-        
